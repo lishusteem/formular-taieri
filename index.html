@@ -19,8 +19,6 @@
             min-height: 100vh;
             padding: 20px;
             color: #333;
-            padding-bottom: 150px;
-            /* Space for debug console */
         }
 
         .container {
@@ -66,11 +64,18 @@
         .section-title {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             color: #2c3e50;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 16px;
+            display: block;
         }
 
         .btn {
@@ -104,14 +109,6 @@
             border: 2px solid #bdc3c7;
         }
 
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-            padding: 8px 16px;
-            font-size: 14px;
-            width: auto;
-        }
-
         .btn-submit {
             background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
             color: white;
@@ -121,67 +118,12 @@
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            background: #bdc3c7;
+            /* Gray out disabled button */
         }
 
         .hidden {
             display: none !important;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 12px;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .location-result {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-
-        .location-result p {
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .accuracy {
-            font-size: 12px;
-            color: #7f8c8d;
-        }
-
-        #map {
-            height: 200px;
-            border-radius: 8px;
-            margin: 12px 0;
-        }
-
-        .error {
-            background: #fee;
-            border: 1px solid #fcc;
-            border-radius: 8px;
-            padding: 16px;
-            color: #c0392b;
-            margin-top: 16px;
         }
 
         .photos-grid {
@@ -197,6 +139,7 @@
             border-radius: 8px;
             overflow: hidden;
             background: #f8f9fa;
+            border: 1px solid #ddd;
         }
 
         .photo-item img {
@@ -212,51 +155,33 @@
             background: rgba(231, 76, 60, 0.9);
             border: none;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .input-group {
-            margin-bottom: 16px;
+        .photo-count {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
         }
 
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #2c3e50;
+        .photo-count.valid {
+            background: #27ae60;
         }
 
-        .input-group input,
-        .input-group textarea,
-        .input-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
+        #map {
+            height: 250px;
             border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .input-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .success-message {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            padding: 16px;
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 16px;
+            margin: 12px 0;
+            z-index: 1;
         }
 
         .camera-preview {
@@ -304,6 +229,44 @@
             background: #e74c3c;
             color: white;
         }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: #d35400;
+            margin-top: 4px;
+            display: none;
+        }
     </style>
 </head>
 
@@ -318,21 +281,22 @@
             <!-- Photos Section -->
             <div class="section">
                 <div class="section-title">
-                    📸 Fotografii
+                    <div>📸 Fotografii <span id="photoCounter" class="photo-count">0/4</span></div>
                 </div>
-                <!-- Permission Button for Camera -->
+                <span class="section-subtitle">Minim 4 fotografii necesare.</span>
+
                 <button class="btn btn-secondary" id="btnPermCamera">
                     <span>🔓</span>
                     <span>1. Activează Camera</span>
                 </button>
-                <!-- Actual Action Button (Hidden initially) -->
                 <button class="btn btn-primary hidden" id="addPhotoBtn">
                     <span>📷</span>
                     <span>Adaugă fotografie</span>
                 </button>
-                <p id="cameraStatus"
-                    style="font-size:12px; margin-top:5px; color:#666; display:none; text-align:center;"></p>
+
                 <div class="photos-grid" id="photosGrid"></div>
+                <p id="photoError" class="hint-text">Mai ai nevoie de încă <span id="photosNeeded">4</span> fotografii.
+                </p>
             </div>
 
             <!-- Location Section -->
@@ -340,32 +304,26 @@
                 <div class="section-title">
                     📍 Locație
                 </div>
-                <!-- Permission Button for Location -->
+                <span class="section-subtitle">Ajustează pin-ul pe hartă dacă poziția e greșită.</span>
+
                 <button class="btn btn-secondary" id="btnPermLocation">
                     <span>🔓</span>
                     <span>2. Activează GPS</span>
                 </button>
-                <!-- Actual Action Button (Hidden initially) -->
                 <button class="btn btn-primary hidden" id="getLocationBtn">
                     <span>📍</span>
                     <span>Detectează locația</span>
                 </button>
 
-                <p id="gpsStatus" style="font-size:12px; margin-top:5px; color:#666; display:none; text-align:center;">
-                </p>
-
                 <div class="loading hidden" id="locationLoading">
-                    <div class="spinner"></div>
                     <p>Se detectează locația...</p>
-                    <p style="font-size:12px; color:#666">Te rugăm să apeși "Allow/Permite" dacă browserul întreabă.</p>
                 </div>
 
                 <div class="location-result hidden" id="locationResult">
-                    <p><strong>📍 Locație detectată:</strong></p>
-                    <p id="addressText"></p>
-                    <p class="accuracy">Precizie: <span id="accuracyText"></span>m</p>
                     <div id="map"></div>
-                    <button class="btn btn-secondary" id="retryLocation">🔄 Re-detectează</button>
+                    <p style="text-align:center; font-size:12px; color:#666; margin-bottom:5px;">Mută pin-ul pentru
+                        precizie.</p>
+                    <p><strong>📍 Adresă:</strong> <span id="addressText">...</span></p>
                 </div>
 
                 <div class="error hidden" id="locationError">
@@ -377,8 +335,8 @@
 
                 <!-- Manual location fallback -->
                 <div class="input-group" id="manualLocationDiv" style="display: none;">
-                    <label>Sau adaugă manual:</label>
-                    <input type="text" id="manualStreet" placeholder="Strada și numărul">
+                    <label>Stradă și număr:</label>
+                    <input type="text" id="manualStreet" placeholder="Ex: Bd. Elisabeta 5">
                     <select id="manualSector" style="margin-top: 8px;">
                         <option value="">Selectează sectorul</option>
                         <option value="Sector 1">Sector 1</option>
@@ -400,15 +358,16 @@
                     <label>Tip incident:</label>
                     <select id="incidentType">
                         <option value="">Selectează tipul</option>
-                        <option value="toaletare">Toaletare ilegală</option>
-                        <option value="taiere">Tăiere ilegală</option>
-                        <option value="degradare">Degradare copaci</option>
-                        <option value="altele">Altele</option>
+                        <option value="toaletare">Toaletare ilegală (coronament tăiat excesiv)</option>
+                        <option value="taiere">Tăiere completă (fără aviz)</option>
+                        <option value="degradare">Degradare / Găurire / Otrăvire</option>
+                        <option value="constructie">Rădăcini tăiate (lucrări)</option>
                     </select>
                 </div>
                 <div class="input-group">
                     <label>Detalii suplimentare:</label>
-                    <textarea id="description" placeholder="Descrie ce ai observat (opțional)..."></textarea>
+                    <textarea id="description"
+                        placeholder="Descrie ce ai observat, număr aproximtiv de copaci etc..."></textarea>
                 </div>
             </div>
 
@@ -423,9 +382,6 @@
                 <div class="input-group">
                     <input type="email" id="contactEmail" placeholder="Email">
                 </div>
-                <div class="input-group">
-                    <input type="tel" id="contactPhone" placeholder="Telefon">
-                </div>
             </div>
 
             <!-- Submit Button -->
@@ -439,7 +395,7 @@
         </div>
     </div>
 
-    <!-- Camera Preview (hidden by default) -->
+    <!-- Camera Preview -->
     <div class="camera-preview hidden" id="cameraPreview">
         <video id="cameraVideo" autoplay playsinline></video>
         <canvas id="cameraCanvas" style="display: none;"></canvas>
@@ -451,94 +407,73 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // State
+        // --- CONFIG ---
+        const MIN_PHOTOS = 4;
+
+        // --- STATE ---
         let photos = [];
-        let locationData = null; // Renamed to avoid conflict with window.location
+        let locationData = null;
         let map = null;
         let marker = null;
         let stream = null;
-        let cameraAllowed = false;
-        let locationAllowed = false;
 
-        // DOM Elements
+        // --- ELEMENTS ---
         const btnPermCamera = document.getElementById('btnPermCamera');
         const addPhotoBtn = document.getElementById('addPhotoBtn');
-        const cameraStatus = document.getElementById('cameraStatus');
+        const photosGrid = document.getElementById('photosGrid');
+        const photoCounter = document.getElementById('photoCounter');
+        const photoError = document.getElementById('photoError');
+        const photosNeeded = document.getElementById('photosNeeded');
 
         const btnPermLocation = document.getElementById('btnPermLocation');
         const getLocationBtn = document.getElementById('getLocationBtn');
-        const gpsStatus = document.getElementById('gpsStatus');
-
-        const photosGrid = document.getElementById('photosGrid');
-        const cameraPreview = document.getElementById('cameraPreview');
-        const cameraVideo = document.getElementById('cameraVideo');
-        const cameraCanvas = document.getElementById('cameraCanvas');
-        const captureBtn = document.getElementById('captureBtn');
-        const closeCameraBtn = document.getElementById('closeCameraBtn');
-
-        const locationLoading = document.getElementById('locationLoading');
         const locationResult = document.getElementById('locationResult');
-        const locationError = document.getElementById('locationError');
-        const retryLocation = document.getElementById('retryLocation');
+        const addressText = document.getElementById('addressText');
 
         const submitBtn = document.getElementById('submitBtn');
-        const successMessage = document.getElementById('successMessage');
 
-        // --- 1. CAMERA PERMISSIONS & LOGIC ---
-
+        // --- CAMERA LOGIC ---
         btnPermCamera.addEventListener('click', async () => {
-            cameraStatus.style.display = 'block';
-            cameraStatus.textContent = 'Se solicită accesul...';
-            cameraStatus.style.color = 'blue';
-
             try {
-                // Request stream just to get permission
-                const testStream = await navigator.mediaDevices.getUserMedia({ video: true });
-
-                // If successful, stop it immediately
-                testStream.getTracks().forEach(track => track.stop());
-
-                // Update UI to "Allowed" state
-                cameraAllowed = true;
+                const s = await navigator.mediaDevices.getUserMedia({ video: true });
+                s.getTracks().forEach(t => t.stop());
                 btnPermCamera.classList.add('hidden');
                 addPhotoBtn.classList.remove('hidden');
-                cameraStatus.textContent = '✅ Cameră activată';
-                cameraStatus.style.color = 'green';
-
-                // Optional: Open camera immediately for convenience
                 openCamera();
-
-            } catch (err) {
-                console.error(err);
-                cameraStatus.textContent = '❌ Acces refuzat: ' + err.name;
-                cameraStatus.style.color = 'red';
-                alert('Nu putem accesa camera. Te rugăm să verifici setările browserului și să permiți accesul.');
+            } catch (e) {
+                alert('Trebuie sa permiti accesul la camera pentru a continua.');
             }
         });
 
         async function openCamera() {
+            const preview = document.getElementById('cameraPreview');
+            const video = document.getElementById('cameraVideo');
             try {
-                cameraPreview.classList.remove('hidden');
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'environment' },
-                    audio: false
-                });
-                cameraVideo.srcObject = stream;
-            } catch (error) {
-                alert('Eroare la deschiderea camerei: ' + error.message);
-                cameraPreview.classList.add('hidden');
+                preview.classList.remove('hidden');
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
+            } catch (e) {
+                alert('Eroare camera: ' + e.message);
+                preview.classList.add('hidden');
             }
         }
 
-        addPhotoBtn.addEventListener('click', openCamera);
+        document.getElementById('addPhotoBtn').addEventListener('click', openCamera);
+        document.getElementById('closeCameraBtn').addEventListener('click', closeCamera);
 
-        captureBtn.addEventListener('click', () => {
-            const context = cameraCanvas.getContext('2d');
-            cameraCanvas.width = cameraVideo.videoWidth;
-            cameraCanvas.height = cameraVideo.videoHeight;
-            context.drawImage(cameraVideo, 0, 0);
+        function closeCamera() {
+            if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+            document.getElementById('cameraPreview').classList.add('hidden');
+        }
 
-            cameraCanvas.toBlob((blob) => {
+        document.getElementById('captureBtn').addEventListener('click', () => {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('cameraCanvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+
+            canvas.toBlob(blob => {
                 const url = URL.createObjectURL(blob);
                 photos.push({ url, blob });
                 renderPhotos();
@@ -547,277 +482,123 @@
             }, 'image/jpeg', 0.8);
         });
 
-        closeCameraBtn.addEventListener('click', closeCamera);
-
-        function closeCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
-            cameraPreview.classList.add('hidden');
-        }
-
         function renderPhotos() {
-            photosGrid.innerHTML = photos.map((photo, index) => `
+            photosGrid.innerHTML = photos.map((p, i) => `
                 <div class="photo-item">
-                    <img src="${photo.url}" alt="Photo ${index + 1}">
-                    <button onclick="removePhoto(${index})">×</button>
+                    <img src="${p.url}">
+                    <button onclick="removePhoto(${i})">×</button>
                 </div>
             `).join('');
+
+            // Update counter UI
+            photoCounter.textContent = `${photos.length}/${MIN_PHOTOS}`;
+            if (photos.length >= MIN_PHOTOS) {
+                photoCounter.classList.add('valid');
+                photoError.style.display = 'none';
+            } else {
+                photoCounter.classList.remove('valid');
+                photoError.style.display = 'block';
+                photosNeeded.textContent = MIN_PHOTOS - photos.length;
+            }
         }
 
-        function removePhoto(index) {
-            URL.revokeObjectURL(photos[index].url);
-            photos.splice(index, 1);
+        function removePhoto(i) {
+            photos.splice(i, 1);
             renderPhotos();
             checkFormValidity();
         }
 
-        // --- 2. LOCATION PERMISSIONS & LOGIC ---
+        // --- LOCATION LOGIC ---
+        btnPermLocation.addEventListener('click', () => initLocation(true));
+        getLocationBtn.addEventListener('click', () => initLocation(false));
 
-        btnPermLocation.addEventListener('click', () => {
-            // We just trigger the detection logic. If it works, we swap buttons.
-            detectLocation(true);
-        });
-
-        getLocationBtn.addEventListener('click', () => detectLocation(false));
-        retryLocation.addEventListener('click', () => detectLocation(false));
-
-        async function detectLocation(isFirstTime) {
-            if (isFirstTime) {
-                btnPermLocation.disabled = true;
-                btnPermLocation.textContent = 'Se solicită...';
-                gpsStatus.style.display = 'block';
-                gpsStatus.textContent = 'Așteptăm confirmarea GPS...';
-            } else {
-                getLocationBtn.classList.add('hidden');
-            }
-
-            locationLoading.classList.remove('hidden');
-            locationResult.classList.add('hidden');
-            locationError.classList.add('hidden');
+        async function initLocation(firstTime) {
+            if (firstTime) btnPermLocation.textContent = 'Se solicită...';
+            document.getElementById('locationLoading').classList.remove('hidden');
 
             try {
-                const position = await getCurrentPosition();
+                const pos = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true });
+                });
 
-                // If we got here, permission is granted!
-                locationAllowed = true;
-                btnPermLocation.classList.add('hidden'); // Hide permission button
-                getLocationBtn.classList.remove('hidden'); // Show refresh button
-                gpsStatus.textContent = '✅ GPS activat';
-                gpsStatus.style.color = 'green';
-
-                const coords = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                    accuracy: position.coords.accuracy
-                };
-
-                const address = await getAddress(coords.lat, coords.lng);
-
-                locationData = { coords, address };
-
-                document.getElementById('addressText').textContent = address.display_name;
-                document.getElementById('accuracyText').textContent = Math.round(coords.accuracy);
-
-                initMap(coords.lat, coords.lng);
-
-                locationLoading.classList.add('hidden');
+                // Success
+                btnPermLocation.classList.add('hidden');
+                getLocationBtn.classList.remove('hidden');
+                document.getElementById('locationLoading').classList.add('hidden');
                 locationResult.classList.remove('hidden');
 
-                checkFormValidity();
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
 
-            } catch (error) {
-                locationLoading.classList.add('hidden');
-                locationError.classList.remove('hidden');
-                document.getElementById('errorText').textContent = error;
-                document.getElementById('manualLocationDiv').style.display = 'block';
+                updateLocationState(lat, lng);
+                initMap(lat, lng);
 
-                // Reset permission button if it failed
-                if (isFirstTime) {
-                    btnPermLocation.disabled = false;
-                    btnPermLocation.textContent = '🔓 Activează GPS (Reîncearcă)';
-                    gpsStatus.textContent = '❌ ' + error;
-                    gpsStatus.style.color = 'red';
-                }
-            }
-        }
-
-        function getCurrentPosition() {
-            return new Promise((resolve, reject) => {
-                if (!navigator.geolocation) {
-                    reject('Browser-ul nu suportă geolocație');
-                    return;
-                }
-
-                navigator.geolocation.getCurrentPosition(
-                    resolve,
-                    (error) => {
-                        switch (error.code) {
-                            case error.PERMISSION_DENIED:
-                                reject('Ai refuzat accesul la locație.');
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                reject('Locația nu este disponibilă.');
-                                break;
-                            case error.TIMEOUT:
-                                reject('Request timeout.');
-                                break;
-                            default:
-                                reject('Eroare: ' + error.message);
-                        }
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    }
-                );
-            });
-        }
-
-        async function getAddress(lat, lng) {
-            try {
-                const response = await fetch(
-                    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`
-                );
-                if (!response.ok) throw new Error('Nu s-a putut obține adresa');
-                return await response.json();
             } catch (e) {
-                return { display_name: `${lat.toFixed(6)}, ${lng.toFixed(6)}` };
+                document.getElementById('locationLoading').classList.add('hidden');
+                document.getElementById('locationError').classList.remove('hidden');
+                document.getElementById('errorText').textContent = 'Eroare GPS: ' + e.message;
+                if (firstTime) btnPermLocation.textContent = 'Reîncearcă Activarea GPS';
             }
+        }
+
+        async function updateLocationState(lat, lng) {
+            addressText.textContent = 'Se caută adresa...';
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+                const data = await res.json();
+                locationData = { coords: { lat, lng }, address: data };
+                addressText.textContent = data.display_name || 'Adresă necunoscută';
+            } catch (e) {
+                addressText.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                locationData = { coords: { lat, lng }, address: null };
+            }
+            checkFormValidity();
         }
 
         function initMap(lat, lng) {
             if (!map) {
                 map = L.map('map').setView([lat, lng], 17);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap'
-                }).addTo(map);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OS' }).addTo(map);
             } else {
                 map.setView([lat, lng], 17);
             }
 
-            if (marker) {
-                marker.setLatLng([lat, lng]);
-            } else {
-                marker = L.marker([lat, lng]).addTo(map);
-            }
+            if (marker) map.removeLayer(marker);
+
+            // DRAGGABLE MARKER
+            marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+            marker.on('dragend', function (e) {
+                const newPos = marker.getLatLng();
+                updateLocationState(newPos.lat, newPos.lng);
+            });
         }
 
-        // Form validation
+        // --- SUBMIT LOGIC ---
         function checkFormValidity() {
-            const hasPhotos = photos.length > 0;
-            const hasLocation = locationData !== null ||
-                (document.getElementById('manualStreet').value &&
-                    document.getElementById('manualSector').value);
-            const hasIncidentType = document.getElementById('incidentType').value !== '';
+            const hasPhotos = photos.length >= MIN_PHOTOS;
+            const hasLocation = locationData !== null || document.getElementById('manualStreet').value !== '';
+            const hasType = document.getElementById('incidentType').value !== '';
 
-            submitBtn.disabled = !(hasPhotos && hasLocation && hasIncidentType);
+            submitBtn.disabled = !(hasPhotos && hasLocation && hasType);
+            submitBtn.innerHTML = submitBtn.disabled
+                ? (photos.length < MIN_PHOTOS ? `Mai adaugă ${MIN_PHOTOS - photos.length} poze` : 'Completează toate datele')
+                : 'Trimite sesizarea';
         }
 
-        document.getElementById('incidentType').addEventListener('change', checkFormValidity);
-        document.getElementById('manualStreet').addEventListener('input', checkFormValidity);
-        document.getElementById('manualSector').addEventListener('change', checkFormValidity);
+        ['incidentType', 'manualStreet', 'manualSector'].forEach(id => {
+            document.getElementById(id).addEventListener('change', checkFormValidity);
+            document.getElementById(id).addEventListener('input', checkFormValidity);
+        });
 
-        // Form submission
         submitBtn.addEventListener('click', async () => {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Se trimite...';
-
-            // Collect form data
-            const formData = {
-                timestamp: new Date().toISOString(),
-                photos: photos.length,
-                location: locationData ? {
-                    coords: locationData.coords,
-                    address: locationData.address.display_name
-                } : {
-                    manual: {
-                        street: document.getElementById('manualStreet').value,
-                        sector: document.getElementById('manualSector').value
-                    }
-                },
-                incidentType: document.getElementById('incidentType').value,
-                description: document.getElementById('description').value,
-                contact: {
-                    name: document.getElementById('contactName').value,
-                    email: document.getElementById('contactEmail').value,
-                    phone: document.getElementById('contactPhone').value
-                }
-            };
-
-            // Store in localStorage (temporary - in production would send to backend)
-            const reports = JSON.parse(localStorage.getItem('treeReports') || '[]');
-            reports.push(formData);
-            localStorage.setItem('treeReports', JSON.stringify(reports));
-
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Show success
-            successMessage.classList.remove('hidden');
+            await new Promise(r => setTimeout(r, 1500));
+            document.getElementById('successMessage').classList.remove('hidden');
             submitBtn.textContent = '✅ Trimis!';
-
-            // Reset form after 2 seconds
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
+            setTimeout(() => window.location.reload(), 2000);
         });
-    </script>
-    <!-- DEBUG CONSOLE (Temporary) -->
-    <div id="debug-console"
-        style="position:fixed; bottom:0; left:0; right:0; height:120px; background:rgba(0,0,0,0.85); color:#0f0; font-family:monospace; font-size:11px; overflow-y:auto; z-index:9999; padding:8px; border-top: 2px solid #0f0; display:block;">
-        <strong>DEBUG LOG:</strong><br>
-    </div>
-    <script>
-        (function () {
-            var logDiv = document.getElementById('debug-console');
-            function logToScreen(msg, color) {
-                var div = document.createElement('div');
-                div.textContent = '> ' + msg;
-                div.style.color = color || '#0f0';
-                div.style.borderBottom = '1px solid #333';
-                div.style.padding = '2px 0';
-                logDiv.appendChild(div);
-                logDiv.scrollTop = logDiv.scrollHeight;
-            }
-
-            // Capture console.log
-            var originalLog = console.log;
-            console.log = function () {
-                var args = Array.from(arguments).map(a =>
-                    typeof a === 'object' ? JSON.stringify(a) : String(a)
-                ).join(' ');
-                logToScreen(args);
-                originalLog.apply(console, arguments);
-            };
-
-            // Capture errors
-            window.onerror = function (msg, url, line) {
-                logToScreen('CRITICAL ERROR: ' + msg + ' (Line: ' + line + ')', '#ff4444');
-                return false;
-            };
-
-            // Capture unhandled promise rejections
-            window.addEventListener('unhandledrejection', function (event) {
-                logToScreen('PROMISE ERROR: ' + event.reason, '#ff4444');
-            });
-
-            logToScreen('App initialized. Checking APIs...');
-
-            if (!navigator.mediaDevices) {
-                logToScreen('⚠️ navigator.mediaDevices is undefined! Camera will fail.', 'orange');
-            } else {
-                logToScreen('✅ Camera API detected.');
-            }
-
-            if (!navigator.geolocation) {
-                logToScreen('⚠️ navigator.geolocation is undefined!', 'orange');
-            } else {
-                logToScreen('✅ Geolocation API detected.');
-            }
-        })();
     </script>
 </body>
 
