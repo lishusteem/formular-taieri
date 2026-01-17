@@ -19,6 +19,8 @@
             min-height: 100vh;
             padding: 20px;
             color: #333;
+            padding-bottom: 150px;
+            /* Space for debug console */
         }
 
         .container {
@@ -53,6 +55,12 @@
 
         .section {
             margin-bottom: 32px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 24px;
+        }
+
+        .section:last-child {
+            border-bottom: none;
         }
 
         .section-title {
@@ -78,6 +86,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            margin-bottom: 10px;
         }
 
         .btn-primary {
@@ -92,6 +101,7 @@
         .btn-secondary {
             background: #ecf0f1;
             color: #2c3e50;
+            border: 2px solid #bdc3c7;
         }
 
         .btn-danger {
@@ -310,10 +320,18 @@
                 <div class="section-title">
                     📸 Fotografii
                 </div>
-                <button class="btn btn-primary" id="addPhotoBtn">
+                <!-- Permission Button for Camera -->
+                <button class="btn btn-secondary" id="btnPermCamera">
+                    <span>🔓</span>
+                    <span>1. Activează Camera</span>
+                </button>
+                <!-- Actual Action Button (Hidden initially) -->
+                <button class="btn btn-primary hidden" id="addPhotoBtn">
                     <span>📷</span>
                     <span>Adaugă fotografie</span>
                 </button>
+                <p id="cameraStatus"
+                    style="font-size:12px; margin-top:5px; color:#666; display:none; text-align:center;"></p>
                 <div class="photos-grid" id="photosGrid"></div>
             </div>
 
@@ -322,14 +340,24 @@
                 <div class="section-title">
                     📍 Locație
                 </div>
-                <button class="btn btn-primary" id="getLocationBtn">
+                <!-- Permission Button for Location -->
+                <button class="btn btn-secondary" id="btnPermLocation">
+                    <span>🔓</span>
+                    <span>2. Activează GPS</span>
+                </button>
+                <!-- Actual Action Button (Hidden initially) -->
+                <button class="btn btn-primary hidden" id="getLocationBtn">
                     <span>📍</span>
                     <span>Detectează locația</span>
                 </button>
 
+                <p id="gpsStatus" style="font-size:12px; margin-top:5px; color:#666; display:none; text-align:center;">
+                </p>
+
                 <div class="loading hidden" id="locationLoading">
                     <div class="spinner"></div>
                     <p>Se detectează locația...</p>
+                    <p style="font-size:12px; color:#666">Te rugăm să apeși "Allow/Permite" dacă browserul întreabă.</p>
                 </div>
 
                 <div class="location-result hidden" id="locationResult">
@@ -342,6 +370,9 @@
 
                 <div class="error hidden" id="locationError">
                     <p id="errorText"></p>
+                    <button class="btn btn-secondary" style="margin-top:10px"
+                        onclick="document.getElementById('manualLocationDiv').style.display='block'">Introdu
+                        manual</button>
                 </div>
 
                 <!-- Manual location fallback -->
@@ -422,13 +453,22 @@
     <script>
         // State
         let photos = [];
-        let location = null;
+        let locationData = null; // Renamed to avoid conflict with window.location
         let map = null;
         let marker = null;
         let stream = null;
+        let cameraAllowed = false;
+        let locationAllowed = false;
 
         // DOM Elements
+        const btnPermCamera = document.getElementById('btnPermCamera');
         const addPhotoBtn = document.getElementById('addPhotoBtn');
+        const cameraStatus = document.getElementById('cameraStatus');
+
+        const btnPermLocation = document.getElementById('btnPermLocation');
+        const getLocationBtn = document.getElementById('getLocationBtn');
+        const gpsStatus = document.getElementById('gpsStatus');
+
         const photosGrid = document.getElementById('photosGrid');
         const cameraPreview = document.getElementById('cameraPreview');
         const cameraVideo = document.getElementById('cameraVideo');
@@ -436,7 +476,6 @@
         const captureBtn = document.getElementById('captureBtn');
         const closeCameraBtn = document.getElementById('closeCameraBtn');
 
-        const getLocationBtn = document.getElementById('getLocationBtn');
         const locationLoading = document.getElementById('locationLoading');
         const locationResult = document.getElementById('locationResult');
         const locationError = document.getElementById('locationError');
@@ -445,8 +484,39 @@
         const submitBtn = document.getElementById('submitBtn');
         const successMessage = document.getElementById('successMessage');
 
-        // Camera functionality
-        addPhotoBtn.addEventListener('click', async () => {
+        // --- 1. CAMERA PERMISSIONS & LOGIC ---
+
+        btnPermCamera.addEventListener('click', async () => {
+            cameraStatus.style.display = 'block';
+            cameraStatus.textContent = 'Se solicită accesul...';
+            cameraStatus.style.color = 'blue';
+
+            try {
+                // Request stream just to get permission
+                const testStream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+                // If successful, stop it immediately
+                testStream.getTracks().forEach(track => track.stop());
+
+                // Update UI to "Allowed" state
+                cameraAllowed = true;
+                btnPermCamera.classList.add('hidden');
+                addPhotoBtn.classList.remove('hidden');
+                cameraStatus.textContent = '✅ Cameră activată';
+                cameraStatus.style.color = 'green';
+
+                // Optional: Open camera immediately for convenience
+                openCamera();
+
+            } catch (err) {
+                console.error(err);
+                cameraStatus.textContent = '❌ Acces refuzat: ' + err.name;
+                cameraStatus.style.color = 'red';
+                alert('Nu putem accesa camera. Te rugăm să verifici setările browserului și să permiți accesul.');
+            }
+        });
+
+        async function openCamera() {
             try {
                 cameraPreview.classList.remove('hidden');
                 stream = await navigator.mediaDevices.getUserMedia({
@@ -455,10 +525,12 @@
                 });
                 cameraVideo.srcObject = stream;
             } catch (error) {
-                alert('Nu se poate accesa camera. Verifică permisiunile browserului.');
+                alert('Eroare la deschiderea camerei: ' + error.message);
                 cameraPreview.classList.add('hidden');
             }
-        });
+        }
+
+        addPhotoBtn.addEventListener('click', openCamera);
 
         captureBtn.addEventListener('click', () => {
             const context = cameraCanvas.getContext('2d');
@@ -501,18 +573,40 @@
             checkFormValidity();
         }
 
-        // Geolocation functionality
-        getLocationBtn.addEventListener('click', detectLocation);
-        retryLocation.addEventListener('click', detectLocation);
+        // --- 2. LOCATION PERMISSIONS & LOGIC ---
 
-        async function detectLocation() {
-            getLocationBtn.classList.add('hidden');
+        btnPermLocation.addEventListener('click', () => {
+            // We just trigger the detection logic. If it works, we swap buttons.
+            detectLocation(true);
+        });
+
+        getLocationBtn.addEventListener('click', () => detectLocation(false));
+        retryLocation.addEventListener('click', () => detectLocation(false));
+
+        async function detectLocation(isFirstTime) {
+            if (isFirstTime) {
+                btnPermLocation.disabled = true;
+                btnPermLocation.textContent = 'Se solicită...';
+                gpsStatus.style.display = 'block';
+                gpsStatus.textContent = 'Așteptăm confirmarea GPS...';
+            } else {
+                getLocationBtn.classList.add('hidden');
+            }
+
             locationLoading.classList.remove('hidden');
             locationResult.classList.add('hidden');
             locationError.classList.add('hidden');
 
             try {
                 const position = await getCurrentPosition();
+
+                // If we got here, permission is granted!
+                locationAllowed = true;
+                btnPermLocation.classList.add('hidden'); // Hide permission button
+                getLocationBtn.classList.remove('hidden'); // Show refresh button
+                gpsStatus.textContent = '✅ GPS activat';
+                gpsStatus.style.color = 'green';
+
                 const coords = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
@@ -521,7 +615,7 @@
 
                 const address = await getAddress(coords.lat, coords.lng);
 
-                location = { coords, address };
+                locationData = { coords, address };
 
                 document.getElementById('addressText').textContent = address.display_name;
                 document.getElementById('accuracyText').textContent = Math.round(coords.accuracy);
@@ -538,6 +632,14 @@
                 locationError.classList.remove('hidden');
                 document.getElementById('errorText').textContent = error;
                 document.getElementById('manualLocationDiv').style.display = 'block';
+
+                // Reset permission button if it failed
+                if (isFirstTime) {
+                    btnPermLocation.disabled = false;
+                    btnPermLocation.textContent = '🔓 Activează GPS (Reîncearcă)';
+                    gpsStatus.textContent = '❌ ' + error;
+                    gpsStatus.style.color = 'red';
+                }
             }
         }
 
@@ -553,16 +655,16 @@
                     (error) => {
                         switch (error.code) {
                             case error.PERMISSION_DENIED:
-                                reject('Ai refuzat accesul la locație. Activează locația pentru această pagină.');
+                                reject('Ai refuzat accesul la locație.');
                                 break;
                             case error.POSITION_UNAVAILABLE:
-                                reject('Locația nu este disponibilă. Asigură-te că GPS-ul este activ.');
+                                reject('Locația nu este disponibilă.');
                                 break;
                             case error.TIMEOUT:
-                                reject('Request timeout - încearcă din nou.');
+                                reject('Request timeout.');
                                 break;
                             default:
-                                reject('Eroare la detectarea locației.');
+                                reject('Eroare: ' + error.message);
                         }
                     },
                     {
@@ -575,11 +677,15 @@
         }
 
         async function getAddress(lat, lng) {
-            const response = await fetch(
-                `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`
-            );
-            if (!response.ok) throw new Error('Nu s-a putut obține adresa');
-            return await response.json();
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`
+                );
+                if (!response.ok) throw new Error('Nu s-a putut obține adresa');
+                return await response.json();
+            } catch (e) {
+                return { display_name: `${lat.toFixed(6)}, ${lng.toFixed(6)}` };
+            }
         }
 
         function initMap(lat, lng) {
@@ -602,7 +708,7 @@
         // Form validation
         function checkFormValidity() {
             const hasPhotos = photos.length > 0;
-            const hasLocation = location !== null ||
+            const hasLocation = locationData !== null ||
                 (document.getElementById('manualStreet').value &&
                     document.getElementById('manualSector').value);
             const hasIncidentType = document.getElementById('incidentType').value !== '';
@@ -623,9 +729,9 @@
             const formData = {
                 timestamp: new Date().toISOString(),
                 photos: photos.length,
-                location: location ? {
-                    coords: location.coords,
-                    address: location.address.display_name
+                location: locationData ? {
+                    coords: locationData.coords,
+                    address: locationData.address.display_name
                 } : {
                     manual: {
                         street: document.getElementById('manualStreet').value,
@@ -655,17 +761,8 @@
 
             // Reset form after 2 seconds
             setTimeout(() => {
-                location.reload();
+                window.location.reload();
             }, 2000);
-        });
-
-        // Load cached data on page load
-        window.addEventListener('load', () => {
-            const cached = sessionStorage.getItem('currentReport');
-            if (cached) {
-                const data = JSON.parse(cached);
-                // Restore form state if needed
-            }
         });
     </script>
     <!-- DEBUG CONSOLE (Temporary) -->
@@ -711,7 +808,6 @@
 
             if (!navigator.mediaDevices) {
                 logToScreen('⚠️ navigator.mediaDevices is undefined! Camera will fail.', 'orange');
-                logToScreen('Possible cause: HTTP connection (not HTTPS) or older browser.', 'orange');
             } else {
                 logToScreen('✅ Camera API detected.');
             }
