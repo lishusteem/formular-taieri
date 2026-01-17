@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -25,7 +26,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
 
@@ -132,8 +133,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .location-result {
@@ -263,7 +269,7 @@
 
         .camera-controls {
             padding: 20px;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: space-around;
             gap: 12px;
@@ -290,6 +296,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -428,13 +435,13 @@
         const cameraCanvas = document.getElementById('cameraCanvas');
         const captureBtn = document.getElementById('captureBtn');
         const closeCameraBtn = document.getElementById('closeCameraBtn');
-        
+
         const getLocationBtn = document.getElementById('getLocationBtn');
         const locationLoading = document.getElementById('locationLoading');
         const locationResult = document.getElementById('locationResult');
         const locationError = document.getElementById('locationError');
         const retryLocation = document.getElementById('retryLocation');
-        
+
         const submitBtn = document.getElementById('submitBtn');
         const successMessage = document.getElementById('successMessage');
 
@@ -442,9 +449,9 @@
         addPhotoBtn.addEventListener('click', async () => {
             try {
                 cameraPreview.classList.remove('hidden');
-                stream = await navigator.mediaDevices.getUserMedia({ 
+                stream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: 'environment' },
-                    audio: false 
+                    audio: false
                 });
                 cameraVideo.srcObject = stream;
             } catch (error) {
@@ -458,7 +465,7 @@
             cameraCanvas.width = cameraVideo.videoWidth;
             cameraCanvas.height = cameraVideo.videoHeight;
             context.drawImage(cameraVideo, 0, 0);
-            
+
             cameraCanvas.toBlob((blob) => {
                 const url = URL.createObjectURL(blob);
                 photos.push({ url, blob });
@@ -513,19 +520,19 @@
                 };
 
                 const address = await getAddress(coords.lat, coords.lng);
-                
+
                 location = { coords, address };
-                
+
                 document.getElementById('addressText').textContent = address.display_name;
                 document.getElementById('accuracyText').textContent = Math.round(coords.accuracy);
-                
+
                 initMap(coords.lat, coords.lng);
-                
+
                 locationLoading.classList.add('hidden');
                 locationResult.classList.remove('hidden');
-                
+
                 checkFormValidity();
-                
+
             } catch (error) {
                 locationLoading.classList.add('hidden');
                 locationError.classList.remove('hidden');
@@ -540,11 +547,11 @@
                     reject('Browser-ul nu suportă geolocație');
                     return;
                 }
-                
+
                 navigator.geolocation.getCurrentPosition(
                     resolve,
                     (error) => {
-                        switch(error.code) {
+                        switch (error.code) {
                             case error.PERMISSION_DENIED:
                                 reject('Ai refuzat accesul la locație. Activează locația pentru această pagină.');
                                 break;
@@ -584,7 +591,7 @@
             } else {
                 map.setView([lat, lng], 17);
             }
-            
+
             if (marker) {
                 marker.setLatLng([lat, lng]);
             } else {
@@ -595,11 +602,11 @@
         // Form validation
         function checkFormValidity() {
             const hasPhotos = photos.length > 0;
-            const hasLocation = location !== null || 
-                (document.getElementById('manualStreet').value && 
-                 document.getElementById('manualSector').value);
+            const hasLocation = location !== null ||
+                (document.getElementById('manualStreet').value &&
+                    document.getElementById('manualSector').value);
             const hasIncidentType = document.getElementById('incidentType').value !== '';
-            
+
             submitBtn.disabled = !(hasPhotos && hasLocation && hasIncidentType);
         }
 
@@ -661,5 +668,61 @@
             }
         });
     </script>
+    <!-- DEBUG CONSOLE (Temporary) -->
+    <div id="debug-console"
+        style="position:fixed; bottom:0; left:0; right:0; height:120px; background:rgba(0,0,0,0.85); color:#0f0; font-family:monospace; font-size:11px; overflow-y:auto; z-index:9999; padding:8px; border-top: 2px solid #0f0; display:block;">
+        <strong>DEBUG LOG:</strong><br>
+    </div>
+    <script>
+        (function () {
+            var logDiv = document.getElementById('debug-console');
+            function logToScreen(msg, color) {
+                var div = document.createElement('div');
+                div.textContent = '> ' + msg;
+                div.style.color = color || '#0f0';
+                div.style.borderBottom = '1px solid #333';
+                div.style.padding = '2px 0';
+                logDiv.appendChild(div);
+                logDiv.scrollTop = logDiv.scrollHeight;
+            }
+
+            // Capture console.log
+            var originalLog = console.log;
+            console.log = function () {
+                var args = Array.from(arguments).map(a =>
+                    typeof a === 'object' ? JSON.stringify(a) : String(a)
+                ).join(' ');
+                logToScreen(args);
+                originalLog.apply(console, arguments);
+            };
+
+            // Capture errors
+            window.onerror = function (msg, url, line) {
+                logToScreen('CRITICAL ERROR: ' + msg + ' (Line: ' + line + ')', '#ff4444');
+                return false;
+            };
+
+            // Capture unhandled promise rejections
+            window.addEventListener('unhandledrejection', function (event) {
+                logToScreen('PROMISE ERROR: ' + event.reason, '#ff4444');
+            });
+
+            logToScreen('App initialized. Checking APIs...');
+
+            if (!navigator.mediaDevices) {
+                logToScreen('⚠️ navigator.mediaDevices is undefined! Camera will fail.', 'orange');
+                logToScreen('Possible cause: HTTP connection (not HTTPS) or older browser.', 'orange');
+            } else {
+                logToScreen('✅ Camera API detected.');
+            }
+
+            if (!navigator.geolocation) {
+                logToScreen('⚠️ navigator.geolocation is undefined!', 'orange');
+            } else {
+                logToScreen('✅ Geolocation API detected.');
+            }
+        })();
+    </script>
 </body>
+
 </html>
