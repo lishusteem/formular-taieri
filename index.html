@@ -28,6 +28,7 @@
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
         .header {
@@ -92,6 +93,7 @@
             justify-content: center;
             gap: 8px;
             margin-bottom: 10px;
+            text-decoration: none;
         }
 
         .btn-primary {
@@ -112,7 +114,34 @@
         .btn-submit {
             background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
             color: white;
-            margin-top: 24px;
+            margin-top: 10px;
+        }
+
+        .btn-alert {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-call {
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+            color: white;
+            font-size: 18px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .btn:disabled {
@@ -125,6 +154,7 @@
             display: none !important;
         }
 
+        /* Photos Grid */
         .photos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -193,68 +223,29 @@
         }
 
         .center-pin {
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 50% 0;
+            background: #ea4335;
             position: absolute;
-            top: 50%;
+            transform: rotate(-45deg);
             left: 50%;
-            transform: translate(-50%, -100%);
+            top: 50%;
+            margin-top: -30px;
+            margin-left: -15px;
             z-index: 1000;
             pointer-events: none;
-            font-size: 40px;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 40px;
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.4);
         }
 
         .center-pin::after {
-            content: '📍';
-        }
-
-        .camera-preview {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: black;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .camera-preview video {
-            flex: 1;
-            width: 100%;
-            object-fit: cover;
-        }
-
-        .camera-controls {
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: space-around;
-            gap: 12px;
-        }
-
-        .camera-controls button {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-capture {
-            background: #2ecc71;
-            color: white;
-        }
-
-        .btn-close {
-            background: #e74c3c;
-            color: white;
+            content: '';
+            width: 14px;
+            height: 14px;
+            margin: 8px 0 0 8px;
+            background: #fff;
+            position: absolute;
+            border-radius: 50%;
         }
 
         .input-group {
@@ -278,6 +269,11 @@
             font-size: 14px;
         }
 
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
         .success-message {
             background: #d4edda;
             border: 1px solid #c3e6cb;
@@ -285,7 +281,8 @@
             padding: 16px;
             border-radius: 8px;
             text-align: center;
-            margin-top: 16px;
+            margin-bottom: 24px;
+            font-weight: bold;
         }
 
         .hint-text {
@@ -294,11 +291,84 @@
             margin-top: 4px;
             display: none;
         }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            margin: 10px 0;
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2ecc71;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Best Practices Box */
+        .best-practices {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .best-practices h4 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .best-practices ol {
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .best-practices li {
+            margin-bottom: 10px;
+        }
+
+        .data-summary {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .data-summary strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Custom File Input Styling */
+        .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <!-- VIEW 1: Formular Principal -->
+    <div class="container" id="mainForm">
         <div class="header">
             <h1>🌳 Sesizare Toaletare/Tăiere</h1>
             <p>București - Raportează ilegalități</p>
@@ -308,21 +378,20 @@
             <!-- Photos Section -->
             <div class="section">
                 <div class="section-title">
-                    <div>📸 Fotografii <span id="photoCounter" class="photo-count">0/4</span></div>
+                    <div>📸 Fotografii <span id="photoCounter" class="photo-count">0/2</span></div>
                 </div>
-                <span class="section-subtitle">Minim 4 fotografii necesare.</span>
+                <span class="section-subtitle">Minim 2 fotografii necesare.</span>
 
-                <button class="btn btn-secondary" id="btnPermCamera">
-                    <span>🔓</span>
-                    <span>1. Activează Camera</span>
-                </button>
-                <button class="btn btn-primary hidden" id="addPhotoBtn">
-                    <span>📷</span>
-                    <span>Adaugă fotografie</span>
-                </button>
+                <div class="file-upload-wrapper">
+                    <button class="btn btn-secondary">
+                        <span>📂</span>
+                        <span>Încarcă poze (Cameră / Galerie)</span>
+                    </button>
+                    <input type="file" id="fileInput" multiple accept="image/*">
+                </div>
 
                 <div class="photos-grid" id="photosGrid"></div>
-                <p id="photoError" class="hint-text">Mai ai nevoie de încă <span id="photosNeeded">4</span> fotografii.
+                <p id="photoError" class="hint-text">Mai ai nevoie de încă <span id="photosNeeded">2</span> fotografii.
                 </p>
             </div>
 
@@ -335,7 +404,7 @@
 
                 <button class="btn btn-secondary" id="btnPermLocation">
                     <span>🔓</span>
-                    <span>2. Activează GPS</span>
+                    <span>Activează GPS</span>
                 </button>
                 <button class="btn btn-primary hidden" id="getLocationBtn">
                     <span>📍</span>
@@ -351,9 +420,13 @@
                         <div id="map"></div>
                         <div class="center-pin"></div>
                     </div>
-                    <p style="text-align:center; font-size:12px; color:#666; margin-bottom:5px;">Mișcă harta pentru a
-                        fixa poziția exactă.</p>
-                    <p><strong>📍 Adresă:</strong> <span id="addressText">...</span></p>
+                    <p style="text-align:center; font-size:12px; color:#666; margin-bottom:5px;">
+                        Mișcă harta pentru a fixa poziția exactă.
+                    </p>
+                    <div class="input-group">
+                        <label>Adresa detectată:</label>
+                        <input type="text" id="addressText" readonly style="background:#f9f9f9; color:#555;">
+                    </div>
                 </div>
 
                 <div class="error hidden" id="locationError">
@@ -365,7 +438,7 @@
 
                 <!-- Manual location fallback -->
                 <div class="input-group" id="manualLocationDiv" style="display: none;">
-                    <label>Stradă și număr:</label>
+                    <label>Stradă și număr (Manual):</label>
                     <input type="text" id="manualStreet" placeholder="Ex: Bd. Elisabeta 5">
                     <select id="manualSector" style="margin-top: 8px;">
                         <option value="">Selectează sectorul</option>
@@ -377,6 +450,13 @@
                         <option value="Sector 6">Sector 6</option>
                     </select>
                 </div>
+
+                <!-- NEW: Reper locatie -->
+                <div class="input-group" style="margin-top: 16px;">
+                    <label>Reper locație (Opțional dar util):</label>
+                    <textarea id="locationLandmark"
+                        placeholder="Ex: În fața magazinului Mega Image, lângă stația de autobuz..."></textarea>
+                </div>
             </div>
 
             <!-- Description Section -->
@@ -385,70 +465,122 @@
                     📝 Descriere
                 </div>
                 <div class="input-group">
-                    <label>Tip incident:</label>
-                    <select id="incidentType">
-                        <option value="">Selectează tipul</option>
-                        <option value="toaletare">Toaletare ilegală (coronament tăiat excesiv)</option>
-                        <option value="taiere">Tăiere completă (fără aviz)</option>
-                        <option value="degradare">Degradare / Găurire / Otrăvire</option>
-                        <option value="constructie">Rădăcini tăiate (lucrări)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Detalii suplimentare:</label>
-                    <textarea id="description"
-                        placeholder="Descrie ce ai observat, număr aproximtiv de copaci etc..."></textarea>
+                    <label>Detalii (Ce se întâmplă?):</label>
+                    <textarea id="description" rows="5" placeholder="Ex: Tăiere completă, toaletare agresivă, rădăcini secționate. 
+Sunt însemne ale unei firme private sau de stat? 
+Sunt mai mulți copaci deja tăiați?"></textarea>
                 </div>
             </div>
 
             <!-- Contact Section -->
             <div class="section">
                 <div class="section-title">
-                    👤 Contact (opțional)
+                    👤 Contact (Opțional)
                 </div>
                 <div class="input-group">
-                    <input type="text" id="contactName" placeholder="Nume">
-                </div>
-                <div class="input-group">
-                    <input type="email" id="contactEmail" placeholder="Email">
+                    <input type="email" id="contactEmail" placeholder="Adresa ta de email (pentru confirmare)">
                 </div>
             </div>
 
-            <!-- Submit Button -->
-            <button class="btn btn-submit" id="submitBtn" disabled>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Buttons -->
+            <button class="btn btn-submit" id="btnSubmitSimple" disabled>
                 Trimite sesizarea
             </button>
 
-            <div class="success-message hidden" id="successMessage">
-                ✅ Sesizare trimisă cu succes!
-            </div>
+            <button class="btn btn-alert" id="btnSubmitCall" disabled>
+                🚨 Trimite și Sună la Poliție
+            </button>
         </div>
     </div>
 
-    <!-- Camera Preview -->
-    <div class="camera-preview hidden" id="cameraPreview">
-        <video id="cameraVideo" autoplay playsinline></video>
-        <canvas id="cameraCanvas" style="display: none;"></canvas>
-        <div class="camera-controls">
-            <button class="btn-close" id="closeCameraBtn">✕ Închide</button>
-            <button class="btn-capture" id="captureBtn">📷 Capturează</button>
+    <!-- VIEW 2: Guidance / Call (Inițial ascuns) -->
+    <div class="container hidden" id="guidanceView">
+        <div class="header" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">
+            <h1>Pasul 2: Acțiune Imediată</h1>
+        </div>
+        <div class="form-content">
+            <div class="success-message">
+                ✅ Sesizare înregistrată!
+            </div>
+
+            <p style="margin-bottom: 16px;">Acum urmează acești pași pentru a opri tăierea:</p>
+
+            <!-- Rezumat Date pentru Apel -->
+            <div class="data-summary">
+                <strong>📍 Adresa de comunicat:</strong>
+                <span id="summaryAddress">...</span>
+                <br><br>
+                <strong>🏢 Reper:</strong>
+                <span id="summaryLandmark">...</span>
+                <br><br>
+                <strong>📝 Detalii:</strong>
+                <span id="summaryDesc">...</span>
+            </div>
+
+            <div class="best-practices">
+                <h4>📞 Ghid conversație Poliția Locală (021.9752)</h4>
+                <ol>
+                    <li>Apelează numărul de mai jos.</li>
+                    <li>Cere <strong>numărul de înregistrare</strong> (insistă dacă zic că nu dau pe loc).</li>
+                    <li>Cere <strong>numele polițistului</strong> care a preluat apelul.</li>
+                    <li>Spune: <em>"Asist la o tăiere/toaletare pe strada [Adresa de mai sus], reper [Reper]."</em></li>
+                    <li>Cere trimiterea unui echipaj pentru verificarea legalității.</li>
+                    <li>Rămâi în apel până confirmă trimiterea.</li>
+                </ol>
+            </div>
+
+            <a href="tel:0219752" class="btn btn-call" id="btnCallNow">
+                📞 Suna Acum (021.9752)
+            </a>
+
+            <div class="section" style="margin-top: 32px; border-top: 1px solid #eee; padding-top: 24px;">
+                <div class="input-group">
+                    <label>Introdu numărul de înregistrare primit:</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="regNumberInput" placeholder="Ex: 15432 / 18.01.2025" style="flex:1;">
+                    </div>
+                    <button class="btn btn-secondary" id="btnUpdateReg" style="width: 100%; margin-top: 8px;">
+                        💾 Actualizează Numărul
+                    </button>
+                </div>
+                <p id="updateStatus" style="text-align: center; font-size: 13px; color: green; display: none;"></p>
+            </div>
+
+            <button class="btn btn-secondary" onclick="window.location.reload()">Terminat / Sesizare Nouă</button>
+        </div>
+    </div>
+
+    <!-- Success Simple Text (Hidden) -->
+    <div class="container hidden" id="simpleSuccessView">
+        <div class="header">
+            <h1>✅ Trimis</h1>
+        </div>
+        <div class="form-content" style="text-align: center; padding: 40px;">
+            <h3>Mulțumim pentru implicare!</h3>
+            <p>Sesizarea a fost trimisă către platformă.</p>
+            <button class="btn btn-primary" style="margin-top: 20px;" onclick="window.location.reload()">Sesizare
+                Nouă</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // --- CONFIG ---
-        const MIN_PHOTOS = 4;
+        const MIN_PHOTOS = 2;
+        const POLICE_PHONE = '0219752';
 
         // --- STATE ---
         let photos = [];
         let locationData = null;
         let map = null;
-        let stream = null;
+        let currentReportId = null;
 
         // --- ELEMENTS ---
-        const btnPermCamera = document.getElementById('btnPermCamera');
-        const addPhotoBtn = document.getElementById('addPhotoBtn');
+        const fileInput = document.getElementById('fileInput');
         const photosGrid = document.getElementById('photosGrid');
         const photoCounter = document.getElementById('photoCounter');
         const photoError = document.getElementById('photoError');
@@ -457,58 +589,44 @@
         const btnPermLocation = document.getElementById('btnPermLocation');
         const getLocationBtn = document.getElementById('getLocationBtn');
         const locationResult = document.getElementById('locationResult');
-        const addressText = document.getElementById('addressText');
+        const addressText = document.getElementById('addressText'); // Input readonly now
+        const locationLandmark = document.getElementById('locationLandmark');
 
-        const submitBtn = document.getElementById('submitBtn');
+        const btnSubmitSimple = document.getElementById('btnSubmitSimple');
+        const btnSubmitCall = document.getElementById('btnSubmitCall');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
 
-        // --- CAMERA LOGIC ---
-        btnPermCamera.addEventListener('click', async () => {
-            try {
-                const s = await navigator.mediaDevices.getUserMedia({ video: true });
-                s.getTracks().forEach(t => t.stop());
-                btnPermCamera.classList.add('hidden');
-                addPhotoBtn.classList.remove('hidden');
-                openCamera();
-            } catch (e) {
-                alert('Trebuie sa permiti accesul la camera pentru a continua.');
-            }
-        });
+        // Views
+        const mainForm = document.getElementById('mainForm');
+        const guidanceView = document.getElementById('guidanceView');
+        const simpleSuccessView = document.getElementById('simpleSuccessView');
 
-        async function openCamera() {
-            const preview = document.getElementById('cameraPreview');
-            const video = document.getElementById('cameraVideo');
-            try {
-                preview.classList.remove('hidden');
-                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                video.srcObject = stream;
-            } catch (e) {
-                alert('Eroare camera: ' + e.message);
-                preview.classList.add('hidden');
-            }
-        }
+        // Summary Elements
+        const summaryAddress = document.getElementById('summaryAddress');
+        const summaryLandmark = document.getElementById('summaryLandmark');
+        const summaryDesc = document.getElementById('summaryDesc');
 
-        document.getElementById('addPhotoBtn').addEventListener('click', openCamera);
-        document.getElementById('closeCameraBtn').addEventListener('click', closeCamera);
+        // --- FILE INPUT LOGIC ---
+        fileInput.addEventListener('change', (e) => {
+            const newFiles = Array.from(e.target.files);
 
-        function closeCamera() {
-            if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-            document.getElementById('cameraPreview').classList.add('hidden');
-        }
+            newFiles.forEach(file => {
+                // Basic validation could go here
+                const reader = new FileReader();
+                reader.onload = (onloadEvent) => {
+                    photos.push({
+                        url: onloadEvent.target.result,
+                        file: file
+                    });
+                    renderPhotos(); // Re-render after each load
+                    checkFormValidity();
+                };
+                reader.readAsDataURL(file);
+            });
 
-        document.getElementById('captureBtn').addEventListener('click', () => {
-            const video = document.getElementById('cameraVideo');
-            const canvas = document.getElementById('cameraCanvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-
-            canvas.toBlob(blob => {
-                const url = URL.createObjectURL(blob);
-                photos.push({ url, blob });
-                renderPhotos();
-                closeCamera();
-                checkFormValidity();
-            }, 'image/jpeg', 0.8);
+            // Allow selecting same files again if cleared
+            fileInput.value = '';
         });
 
         function renderPhotos() {
@@ -530,11 +648,11 @@
             }
         }
 
-        function removePhoto(i) {
+        window.removePhoto = function (i) {
             photos.splice(i, 1);
             renderPhotos();
             checkFormValidity();
-        }
+        };
 
         // --- LOCATION LOGIC ---
         btnPermLocation.addEventListener('click', () => initLocation(true));
@@ -549,7 +667,6 @@
                     navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true });
                 });
 
-                // Success
                 btnPermLocation.classList.add('hidden');
                 getLocationBtn.classList.remove('hidden');
                 document.getElementById('locationLoading').classList.add('hidden');
@@ -570,14 +687,14 @@
         }
 
         async function updateLocationState(lat, lng) {
-            addressText.textContent = 'Se caută adresa...';
+            addressText.value = 'Se caută adresa...';
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
                 const data = await res.json();
                 locationData = { coords: { lat, lng }, address: data };
-                addressText.textContent = data.display_name || 'Adresă necunoscută';
+                addressText.value = data.display_name || 'Adresă necunoscută';
             } catch (e) {
-                addressText.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                addressText.value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
                 locationData = { coords: { lat, lng }, address: null };
             }
             checkFormValidity();
@@ -587,8 +704,6 @@
             if (!map) {
                 map = L.map('map').setView([lat, lng], 17);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OS' }).addTo(map);
-
-                // --- LISTEN FOR DRAG END (Uber Style) ---
                 map.on('moveend', function () {
                     const center = map.getCenter();
                     updateLocationState(center.lat, center.lng);
@@ -598,35 +713,164 @@
             }
         }
 
-        // --- SUBMIT LOGIC ---
+        // --- VALIDATION AND SUBMIT ---
         function checkFormValidity() {
             const hasPhotos = photos.length >= MIN_PHOTOS;
             const hasLocation = locationData !== null || document.getElementById('manualStreet').value !== '';
-            const hasType = document.getElementById('incidentType').value !== '';
 
-            submitBtn.disabled = !(hasPhotos && hasLocation && hasType);
-            submitBtn.innerHTML = submitBtn.disabled
-                ? (photos.length < MIN_PHOTOS ? `Mai adaugă ${MIN_PHOTOS - photos.length} poze` : 'Completează toate datele')
-                : 'Trimite sesizarea';
+            // Incident Type removed from validation
+            const isValid = hasPhotos && hasLocation;
+
+            btnSubmitSimple.disabled = !isValid;
+            btnSubmitCall.disabled = !isValid;
         }
 
-        ['incidentType', 'manualStreet', 'manualSector'].forEach(id => {
-            document.getElementById(id).addEventListener('change', checkFormValidity);
-            document.getElementById(id).addEventListener('input', checkFormValidity);
+        ['manualStreet', 'manualSector', 'locationLandmark', 'description'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', checkFormValidity);
+                el.addEventListener('input', checkFormValidity);
+            }
         });
 
-        submitBtn.addEventListener('click', async () => {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Se trimite...';
+        // Generate ID
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
 
-            // Simulare trimitere
-            await new Promise(r => setTimeout(r, 1500));
+        // Main Submit Function
+        async function submitData(isCallFlow) {
+            // UI Prep
+            btnSubmitSimple.disabled = true;
+            btnSubmitCall.disabled = true;
+            progressBar.style.display = 'block';
 
-            document.getElementById('successMessage').classList.remove('hidden');
-            submitBtn.textContent = '✅ Trimis!';
+            currentReportId = generateUUID();
+            const sessionId = sessionStorage.getItem('sessionId') || 'unknown-session';
 
-            setTimeout(() => window.location.reload(), 2000);
+            // Gather Data
+            const mainPayload = {
+                type: 'main_data',
+                report_id: currentReportId,
+                session_id: sessionId,
+                timestamp: new Date().toISOString(),
+                is_call_flow: isCallFlow,
+                description: document.getElementById('description').value,
+                landmark: document.getElementById('locationLandmark').value,
+                location: locationData ? {
+                    lat: locationData.coords.lat,
+                    lng: locationData.coords.lng,
+                    address: locationData.address ? locationData.address.display_name : 'Unknown',
+                } : {
+                    manual_address: `${document.getElementById('manualStreet').value}, ${document.getElementById('manualSector').value}`
+                },
+                contact_email: document.getElementById('contactEmail').value,
+                total_images: photos.length
+            };
+
+            // Progress helper
+            const totalSteps = 1 + photos.length;
+            let currentStep = 0;
+            const updateProgress = (pct) => progressFill.style.width = `${pct}%`;
+
+            try {
+                // 1. Send Main Data (Simulated)
+                console.log('Sending Main Data...', mainPayload);
+                await new Promise(r => setTimeout(r, 600));
+
+                currentStep++;
+                updateProgress((currentStep / totalSteps) * 100);
+
+                // 2. Send Images (Simulated Loop)
+                for (let i = 0; i < photos.length; i++) {
+                    // In real app, we'd send base64 or FormData
+                    console.log(`Sending Image ${i + 1}...`);
+                    await new Promise(r => setTimeout(r, 400)); // Sim upload
+                    currentStep++;
+                    updateProgress((currentStep / totalSteps) * 100);
+                }
+
+                // 3. DONE -> Route user
+                mainForm.classList.add('hidden');
+
+                if (isCallFlow) {
+                    showGuidanceView(mainPayload);
+                } else {
+                    simpleSuccessView.classList.remove('hidden');
+                }
+
+            } catch (err) {
+                alert('Eroare la trimitere: ' + err.message);
+                btnSubmitSimple.disabled = false;
+                btnSubmitCall.disabled = false;
+                progressBar.style.display = 'none';
+            }
+        }
+
+        // Logic for Guidance View
+        function showGuidanceView(data) {
+            guidanceView.classList.remove('hidden');
+            window.scrollTo(0, 0);
+
+            // Pre-fill summary
+            let finalAddress = "";
+            if (data.location.address) finalAddress = data.location.address;
+            if (data.location.manual_address) finalAddress = data.location.manual_address;
+
+            summaryAddress.textContent = finalAddress || "Nedetectată";
+            summaryLandmark.textContent = data.landmark || "-";
+            summaryDesc.textContent = data.description || "Fără detalii";
+        }
+
+        // Button Event Listeners
+        btnSubmitSimple.addEventListener('click', () => submitData(false));
+        btnSubmitCall.addEventListener('click', () => submitData(true));
+
+
+        // Call Now Tracking
+        document.getElementById('btnCallNow').addEventListener('click', async () => {
+            console.log('User initiated call to Police');
+            // Send tracking request (Simulated)
+            /* 
+            fetch(webhook, { 
+                method: 'POST', 
+                body: JSON.stringify({ type: 'call_initiated', report_id: currentReportId }) 
+            });
+            */
+            // Mark visually that call was pressed if needed, but standard behavior allows multiple clicks
         });
+
+        // Update Registration Number logic
+        document.getElementById('btnUpdateReg').addEventListener('click', async () => {
+            const regNum = document.getElementById('regNumberInput').value;
+            if (!regNum) {
+                alert('Introdu mai întâi numărul de înregistrare.');
+                return;
+            }
+
+            const btn = document.getElementById('btnUpdateReg');
+            const status = document.getElementById('updateStatus');
+
+            btn.disabled = true;
+            btn.textContent = 'Se actualizează...';
+
+            // Simulate Update Request
+            setTimeout(() => {
+                console.log('Updated Registration Number:', regNum, 'for ID:', currentReportId);
+
+                btn.disabled = false;
+                btn.textContent = '💾 Actualizează Numărul';
+                status.textContent = '✅ Salvat cu succes!';
+                status.style.display = 'block';
+
+                // Clear success msg after 3s
+                setTimeout(() => status.style.display = 'none', 3000);
+            }, 1000);
+        });
+
     </script>
 </body>
 
