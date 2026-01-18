@@ -346,23 +346,6 @@
             display: block;
             margin-bottom: 4px;
         }
-
-        /* Custom File Input Styling */
-        .file-upload-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-upload-wrapper input[type=file] {
-            font-size: 100px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
     </style>
 </head>
 
@@ -382,13 +365,25 @@
                 </div>
                 <span class="section-subtitle">Minim 2 fotografii necesare.</span>
 
-                <div class="file-upload-wrapper">
-                    <button class="btn btn-secondary">
-                        <span>📂</span>
-                        <span>Încarcă poze (Cameră / Galerie)</span>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button class="btn btn-secondary" id="btnCamera" style="flex: 1;">
+                        <span>📷</span>
+                        <span>Fă o poză</span>
                     </button>
-                    <input type="file" id="fileInput" multiple accept="image/*">
+                    <button class="btn btn-secondary" id="btnGallery" style="flex: 1;">
+                        <span>🖼️</span>
+                        <span>Galerie</span>
+                    </button>
                 </div>
+                <p style="font-size: 11px; color: #7f8c8d; margin-bottom: 10px;">
+                    * Telefonul îți va cere permisiunea pentru Camera/Galerie.
+                </p>
+
+                <!-- Hidden inputs for native behavior -->
+                <!-- Capture=environment forces camera on mobile -->
+                <input type="file" id="inputCamera" capture="environment" accept="image/*" style="display:none">
+                <!-- Standard input opens system picker (Gallery/Files) -->
+                <input type="file" id="inputGallery" multiple accept="image/*" style="display:none">
 
                 <div class="photos-grid" id="photosGrid"></div>
                 <p id="photoError" class="hint-text">Mai ai nevoie de încă <span id="photosNeeded">2</span> fotografii.
@@ -580,7 +575,11 @@ Sunt mai mulți copaci deja tăiați?"></textarea>
         let currentReportId = null;
 
         // --- ELEMENTS ---
-        const fileInput = document.getElementById('fileInput');
+        const btnCamera = document.getElementById('btnCamera');
+        const btnGallery = document.getElementById('btnGallery');
+        const inputCamera = document.getElementById('inputCamera');
+        const inputGallery = document.getElementById('inputGallery');
+
         const photosGrid = document.getElementById('photosGrid');
         const photoCounter = document.getElementById('photoCounter');
         const photoError = document.getElementById('photoError');
@@ -608,26 +607,42 @@ Sunt mai mulți copaci deja tăiați?"></textarea>
         const summaryDesc = document.getElementById('summaryDesc');
 
         // --- FILE INPUT LOGIC ---
-        fileInput.addEventListener('change', (e) => {
+        // Link buttons to hidden inputs
+        btnCamera.addEventListener('click', () => {
+            // Check if we are on a desktop for debugging
+            if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                // Fallback to normal input if not on mobile, but try capture
+            }
+            inputCamera.click();
+        });
+
+        btnGallery.addEventListener('click', () => {
+            inputGallery.click();
+        });
+
+        // Handle File Selection (Merge logic for both)
+        const handleFiles = (e) => {
             const newFiles = Array.from(e.target.files);
+            if (newFiles.length === 0) return;
 
             newFiles.forEach(file => {
-                // Basic validation could go here
                 const reader = new FileReader();
                 reader.onload = (onloadEvent) => {
                     photos.push({
                         url: onloadEvent.target.result,
                         file: file
                     });
-                    renderPhotos(); // Re-render after each load
+                    renderPhotos();
                     checkFormValidity();
                 };
                 reader.readAsDataURL(file);
             });
+            // Reset to allow selecting same file again
+            e.target.value = '';
+        };
 
-            // Allow selecting same files again if cleared
-            fileInput.value = '';
-        });
+        inputCamera.addEventListener('change', handleFiles);
+        inputGallery.addEventListener('change', handleFiles);
 
         function renderPhotos() {
             photosGrid.innerHTML = photos.map((p, i) => `
