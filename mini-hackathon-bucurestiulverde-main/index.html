@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucureștiul Verde - Hackathon</title>
+    <meta name="description"
+        content="Automatizare Sesizări Tăieri/Toaletări Ilegale - București. Un proiect pentru transparență și acțiune civică.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Bucureștiul<span class="highlight">Verde</span></a>
+            <ul class="nav-links">
+                <li><a href="#prezentare">Context</a></li>
+                <li><a href="#ecosistem">Presiune</a></li>
+                <li><a href="#mvp">MVP</a></li>
+                <li><a href="#echipe">Echipe</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container hero-content">
+            <h1>Automatizare Sesizări <span class="gradient-text">Tăieri Ilegale</span></h1>
+            <p class="subtitle">București</p>
+            <p class="description">
+                O echipă care automatizează procesul birocratic, urmărește cazurile până la capăt și folosește datele
+                pentru presiune publică.
+            </p>
+            <div class="cta-group">
+                <a href="#prezentare" class="btn primary">Despre Proiect</a>
+                <a href="#echipe" class="btn secondary">Vezi Echipele</a>
+            </div>
+        </div>
+        <div class="hero-bg"></div>
+    </header>
+
+    <section id="prezentare" class="section">
+        <div class="container">
+            <div class="grid-2">
+                <div class="card problem">
+                    <div class="card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <h2>Problema</h2>
+                    <p>În București, ADP-urile și privații taie arbori fără avize legale. Când cetățenii sesizează:</p>
+                    <ul>
+                        <li><i class="fa-solid fa-clock"></i> Procesul birocratic consumă timp (cereri la Mediu,
+                            plângeri la Poliție).</li>
+                        <li><i class="fa-solid fa-user-shield"></i> Autoritățile descurajează cetățenii și protejează
+                            uneori tăietorii.</li>
+                        <li><i class="fa-solid fa-ban"></i> Oamenii renunță → tăierile continuă nepedepsite.</li>
+                    </ul>
+                </div>
+                <div class="card solution">
+                    <div class="card-icon"><i class="fa-solid fa-robot"></i></div>
+                    <h2>Ce Facem Noi</h2>
+                    <p>Automatizăm birocrația și generăm dovezi ale incompetenței sau relei-voințe.</p>
+                    <ul>
+                        <li><i class="fa-solid fa-file-signature"></i> Urmărim cazurile până la obținerea răspunsurilor
+                            oficiale.</li>
+                        <li><i class="fa-solid fa-bullhorn"></i> Folosim datele pentru campanii, știri și proteste.</li>
+                        <li><i class="fa-solid fa-chart-line"></i> Creăm o evidență clară a autorizațiilor (sau lipsei
+                            lor).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecosistem" class="section dark-alt">
+        <div class="container">
+            <h2 class="section-title">Schema de presiune civica</h2>
+            <p class="section-desc">Cum transformăm o sesizare civică în presiune administrativă.</p>
+
+            <div class="ecosystem-diagram">
+                <!-- Societatea Civila -->
+                <div class="node civil">
+                    <div class="icon"><i class="fa-solid fa-users"></i></div>
+                    <h3>Societatea Civilă</h3>
+                    <div class="sub-nodes">
+                        <span class="tag citizen">Cetățeanul (Sesizează)</span>
+                        <span class="tag team">Echipa Noastră (Procesează)</span>
+                    </div>
+                </div>
+
+                <div class="arrow-down"><i class="fa-solid fa-arrow-down"></i></div>
+
+                <!-- Action Split -->
+                <div class="action-path">
+                    <div class="path left">
+                        <div class="path-label">Cerere 544 (Verificare Aviz)</div>
+                        <div class="line"></div>
+                        <div class="node institution">
+                            <div class="icon"><i class="fa-solid fa-building-columns"></i></div>
+                            <h3>Direcția de Mediu</h3>
+                            <p>Confirmă/Infirmă legalitatea</p>
+                        </div>
+                    </div>
+
+                    <div class="path right">
+                        <div class="path-label">Sesizare / Plângere</div>
+                        <div class="line"></div>
+                        <div class="node institution">
+                            <div class="icon"><i class="fa-solid fa-user-police"></i></div>
+                            <h3>Poliția Locală</h3>
+                            <p>Verifică situația în teren</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow-down"><i class="fa-solid fa-arrow-down"></i></div>
+
+                <!-- Outcome -->
+                <div class="node outcome">
+                    <div class="icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <h3>Rezultat: "Proof of Incompetence"</h3>
+                    <p>Comparăm răspunsurile oficiale. Identificăm inconsistențele. Presiune publică.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="mvp" class="section">
+        <div class="container">
+            <h2 class="section-title">MVP - Mini Hackathon</h2>
+            <div class="mvp-grid">
+                <div class="feature-box">
+                    <h3><i class="fa-solid fa-desktop"></i> Frontend</h3>
+                    <ul>
+                        <li>Formular web simplu & intuitiv</li>
+                        <li>Pin pe hartă (Geolocation)</li>
+                        <li>Hartă publică cu sesizări active</li>
+                    </ul>
+                </div>
+                <div class="feature-box">
+                    <h3><i class="fa-solid fa-server"></i> Backend</h3>
+                    <ul>
+                        <li>Dashboard Admin preluarea si managementul sesizărilor</li>
+                        <li>Formatare date în model Cerere 544 și Sesizare</li>
+                        <li>Status Update ("5 copaci tăiați confirmat")</li>
+                    </ul>
+                </div>
+                <div class="feature-box warning">
+                    <h3><i class="fa-solid fa-ban"></i> Nu Facem Acum</h3>
+                    <ul>
+                        <li>Stocare Date Personale sensibile</li>
+                        <li>Automatizare completă (OCR etc)</li>
+                        <li>Tracking complex instituții</li>
+                    </ul>
+                </div>
+                <div class="feature-box benefits">
+                    <h3><i class="fa-solid fa-star"></i> Beneficii</h3>
+                    <ul>
+                        <li><strong>Rapid:</strong> Cetățeanul sesizează în 1 minut.</li>
+                        <li><strong>Impact:</strong> Agregăm date pentru presă.</li>
+                        <li><strong>Dovadă:</strong> Documentăm oficial abuzurile.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="echipe" class="section dark-alt">
+        <div class="container">
+            <h2 class="section-title">Împărțire Task-uri</h2>
+            <div class="teams-grid">
+                <!-- Team 1 -->
+                <div class="team-card">
+                    <div class="team-header color-1">
+                        <h3>Echipa 1</h3>
+                        <span>Formular & UI</span>
+                    </div>
+                    <div class="team-body">
+                        <p class="role">Responsabilitate: Interfața de sesizare cetățeni.</p>
+                        <ul class="task-list">
+                            <li>Formular (Pin Locație Exactă, Descriere, Poze)</li>
+                            <li>Validare date frontend</li>
+                            <li>Submit către Backend</li>
+                            <li>UI/UX Simplu și Intuitiv</li>
+                        </ul>
+                        <div class="integration">
+                            <small>↔ E3 (API), E2 (Coords)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team 2 -->
+                <div class="team-card">
+                    <div class="team-header color-2">
+                        <h3>Echipa 2</h3>
+                        <span>Map & Geolocation</span>
+                    </div>
+                    <div class="team-body">
+                        <p class="role">Responsabilitate: Hartă interactivă.</p>
+                        <ul class="task-list">
+                            <li>Integrare Leaflet/Google Maps</li>
+                            <li>Pin cu Geolocation</li>
+                            <li>Hartă publică & Filtre</li>
+                            <li>Vizualizare detalii la click</li>
+                        </ul>
+                        <div class="integration">
+                            <small>↔ E3 (Data Feed), E1 (Locație)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team 3 -->
+                <div class="team-card">
+                    <div class="team-header color-3">
+                        <h3>Echipa 3</h3>
+                        <span>Backend & Admin</span>
+                    </div>
+                    <div class="team-body">
+                        <p class="role">Responsabilitate: Management si Procesare.</p>
+                        <ul class="task-list">
+                            <li>API Primire Sesizări</li>
+                            <li>Database & Admin Panel</li>
+                            <li>State Management (Fluxuri status cerere)</li>
+                            <li>Export Cereri Precompletate (PDF/Word)</li>
+                            <li>(Bonus) Email integrat pt. deployment rapid</li>
+                        </ul>
+                        <div class="integration">
+                            <small>↔ E1, E2 (API Providers)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team 4 -->
+                <div class="team-card">
+                    <div class="team-header color-4">
+                        <h3>Echipa 4</h3>
+                        <span>Operational & Legal</span>
+                    </div>
+                    <div class="team-body">
+                        <p class="role">Responsabilitate: Metodologie.</p>
+                        <ul class="task-list">
+                            <li>Strategie delimitare zonă (fără adresă exactă)</li>
+                            <li>Template-uri Cereri (Mediu / Poliție)</li>
+                            <li>Workflow standard de verificare</li>
+                            <li>Identificare date critice</li>
+                        </ul>
+                        <div class="integration">
+                            <small>↔ Toate (Requirements)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Asistent Civic Hackathon. Pentru un București Verde.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

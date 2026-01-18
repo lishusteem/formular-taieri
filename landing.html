@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucureștiul Verde - Stop Tăieri Ilegale</title>
+    <meta name="description" content="Automatizare Sesizări Tăieri/Toaletări Ilegale. Acționează civic informat.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #0a0f0d;
+            --bg-card: #141a17;
+            --primary: #00ff88;
+            /* Vibrant Green */
+            --primary-dim: #00cc6a;
+            --accent: #ffae00;
+            /* Warning Amber */
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --card-border: rgba(255, 255, 255, 0.1);
+            --font-main: 'Inter', sans-serif;
+            --gradient: linear-gradient(135deg, #00ff88 0%, #00b8ff 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Utilities */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .section-desc {
+            text-align: center;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+        }
+
+        .dark-alt {
+            background-color: #0d1210;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 15, 13, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .highlight {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero */
+        .hero {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 60px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .btn.primary {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .btn.secondary {
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+            z-index: 1;
+            filter: blur(100px);
+        }
+
+        /* Cards */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--card-border);
+            padding: 2.5rem;
+            border-radius: 16px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .card ul {
+            list-style: none;
+        }
+
+        .card ul li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--text-muted);
+        }
+
+        .card ul li i {
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        /* Ecosystem Diagram */
+        .ecosystem-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .node {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .node .icon {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .node.civil .icon {
+            color: var(--primary);
+        }
+
+        .sub-nodes {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .tag {
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .arrow-down {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .action-path {
+            display: flex;
+            gap: 4rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .path {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .path-label {
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .line {
+            width: 2px;
+            height: 30px;
+            background: var(--card-border);
+            margin-bottom: 0.5rem;
+        }
+
+        /* MVP Grid */
+        .mvp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-box {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border-top: 3px solid var(--primary);
+        }
+
+        .feature-box h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-box ul li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .feature-box ul li::before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Highlight box specifically for Police Guide */
+        .feature-box.highlight-box {
+            background: #0f291e;
+            /* Very subtle green tint */
+            border-color: var(--accent);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-box.highlight-box h3 {
+            color: var(--accent);
+        }
+
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        /* Responsive Mobile Styles */
+        @media (max-width: 768px) {
+            .navbar .container {
+                padding: 0 15px;
+            }
+
+            .navbar .logo {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                height: auto;
+                min-height: 100vh;
+                padding-top: 100px;
+                padding-bottom: 50px;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .description {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section {
+                padding: 50px 0;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            /* Stack Grids */
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            /* Diagram Adjustments */
+            .ecosystem-diagram {
+                transform: scale(0.95);
+                width: 100%;
+            }
+
+            .action-path {
+                flex-direction: column;
+                gap: 2rem;
+                align-items: center;
+            }
+
+            .path {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .node {
+                min-width: unset;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Bucureștiul<span class="highlight">Verde</span></a>
+            <ul class="nav-links">
+                <li><a href="#prezentare">Context</a></li>
+                <li><a href="#solutie">Soluția</a></li>
+                <li><a href="index.html" class="highlight">Raportează</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container hero-content">
+            <h1>Oprește <span class="gradient-text">Tăierile Ilegale</span></h1>
+            <p class="subtitle">Platformă de intervenție civică</p>
+            <p class="description">
+                Un instrument care împuternicește cetățenii să documenteze abuzurile și să interacționeze eficient cu
+                Poliția Locală în timp real.
+            </p>
+            <div class="cta-group">
+                <a href="index.html" class="btn primary">
+                    <i class="fa-solid fa-camera"></i> Raportează Acum
+                </a>
+                <a href="#solutie" class="btn secondary">Cum funcționează?</a>
+            </div>
+        </div>
+        <div class="hero-bg"></div>
+    </header>
+
+    <section id="prezentare" class="section">
+        <div class="container">
+            <div class="grid-2">
+                <div class="card problem">
+                    <div class="card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <h2>Problema</h2>
+                    <p>În București, arborii dispar zilnic. Cetățenii vor să intervină, dar se lovesc de obstacole
+                        majore:</p>
+                    <ul>
+                        <li><i class="fa-solid fa-phone-slash"></i> Teama de a suna la Poliție fără să știe ce să spună.
+                        </li>
+                        <li><i class="fa-solid fa-clock"></i> Lipsa dovezilor concrete (GPS, oră) acceptate juridic.
+                        </li>
+                        <li><i class="fa-solid fa-ban"></i> Birocrația care "îngroapă" sesizările.</li>
+                    </ul>
+                </div>
+                <div class="card solution">
+                    <div class="card-icon"><i class="fa-solid fa-check-circle"></i></div>
+                    <h2>Ce Oferim Noi</h2>
+                    <p>Am eliminat frica și birocrația. Aplicația este asistentul tău personal în teren.</p>
+                    <ul>
+                        <li><i class="fa-solid fa-user-shield"></i> <strong>Ghidaj pas-cu-pas</strong> în apelul cu
+                            Poliția (ce legi să invoci).</li>
+                        <li><i class="fa-solid fa-location-dot"></i> <strong>Geo-tagging automat</strong> pentru
+                            dovezile foto.</li>
+                        <li><i class="fa-solid fa-file-contract"></i> <strong>Generare sesizare</strong> scrisă
+                            instantaneu.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecosistem" class="section dark-alt">
+        <div class="container">
+            <h2 class="section-title">De la Sesizare la Presiune</h2>
+            <p class="section-desc">Fluxul prin care acțiunea ta devine obligativitate pentru autorități.</p>
+
+            <div class="ecosystem-diagram">
+                <!-- Societatea Civila -->
+                <div class="node civil">
+                    <div class="icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                    <h3>Tu, în teren</h3>
+                    <div class="sub-nodes">
+                        <span class="tag citizen">Observi</span>
+                        <span class="tag team">Fotografiezi</span>
+                        <span class="tag highlight">Apelezi</span>
+                    </div>
+                </div>
+
+                <div class="arrow-down"><i class="fa-solid fa-arrow-down"></i></div>
+
+                <!-- Action Split -->
+                <div class="action-path">
+                    <div class="path left">
+                        <div class="path-label">Pasul 1: Intervenție</div>
+                        <div class="line"></div>
+                        <div class="node institution">
+                            <div class="icon"><i class="fa-solid fa-phone"></i></div>
+                            <h3>Poliția Locală</h3>
+                            <p>Trimitere echipaj<br>Oprire lucrări</p>
+                        </div>
+                    </div>
+
+                    <div class="path right">
+                        <div class="path-label">Pasul 2: Documentare</div>
+                        <div class="line"></div>
+                        <div class="node institution">
+                            <div class="icon"><i class="fa-solid fa-envelope"></i></div>
+                            <h3>Sesizare Scrisă</h3>
+                            <p>Număr înregistrare<br>Răspuns oficial în 30 zile</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow-down"><i class="fa-solid fa-arrow-down"></i></div>
+
+                <!-- Outcome -->
+                <div class="node outcome">
+                    <div class="icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <h3>Rezultat: Legalitate sau Probă</h3>
+                    <p>Fie lucrările sunt oprite, fie avem dovada scrisă a abuzului pentru presă și procese.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="solutie" class="section">
+        <div class="container">
+            <h2 class="section-title">Funcționalități Cheie</h2>
+            <div class="mvp-grid">
+
+                <div class="feature-box highlight-box">
+                    <h3><i class="fa-solid fa-headset"></i> Asistent Apel Poliție</h3>
+                    <p style="color:#aaa; font-size:0.9rem; margin-bottom:1rem;">Funcționalitatea #1 pentru siguranța
+                        ta.</p>
+                    <ul>
+                        <li>Script de conversație cu dispecerul.</li>
+                        <li>Întrebări cheie pentru a forța intervenția.</li>
+
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <h3><i class="fa-solid fa-camera"></i> Dovezi Inteligente</h3>
+                    <ul>
+                        <li>Upload rapid (Cameră / Galerie).</li>
+                        <li>Blocare metadate (Data, Ora, GPS).</li>
+                        <li>Stocare securizată a probelor.</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <h3><i class="fa-solid fa-map-location-dot"></i> Hartă Interactivă</h3>
+                    <ul>
+                        <li>Pinpoint automat pe locația ta.</li>
+                        <li>Identificare stradă și sector.</li>
+                        <li>Vizualizare alte sesizări din zonă.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Inițiativa Bucureștiul Verde. Open Source Project.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
